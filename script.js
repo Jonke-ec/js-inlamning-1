@@ -12,12 +12,8 @@ const errorPostnummer = document.getElementById("error-postnummer")
 const email = document.getElementById("email")
 const errorEmail = document.getElementById("error-email")
 
-const year = document.getElementById("year")
-const errorYear = document.getElementById("error-year")
-const month = document.getElementById("month")
-const errorMonth = document.getElementById("error-month")
-const day = document.getElementById("day")
-const errorDay = document.getElementById("error-day")
+const birthday = document.getElementById("birthday")
+const errorbirthday = document.getElementById("error-birthday")
 
 function validateLength(event, name, minLength = 2) {
     const error = document.getElementById(`error-${event.target.id}`)
@@ -71,9 +67,6 @@ function comparePassword(password, confirmPassword, name) {
         error.innerText = ""
 }
 
-
-
-
 function validateEmail(email) {
     const regEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -83,60 +76,35 @@ function validateEmail(email) {
         document.getElementById(`error-${email.id}`).innerText = ``
 }
 
-function ageCalculator() {
-    var userinput = document.getElementById("DOB").value;
-    var dob = new Date(userinput);
-    if(userinput==null || userinput=='') {
-      document.getElementById("message").innerHTML = "**Choose a date please!";
-      return false;
-    } else {
+function validateBirth(birthday) {
+    const regBirthdate = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
 
-    //calculate month difference from current date in time
-    var month_diff = Date.now() - dob.getTime();
-
-    //convert the calculated difference in date format
-    var age_dt = new Date(month_diff);
-
-    //extract year from date
-    var year = age_dt.getUTCFullYear();
-
-    //now calculate the age of the user
-    var age = Math.abs(year - 1970);
-
-    //display the calculated age
-    return document.getElementById("result").innerHTML =
-        "Age is: " + age + " years. ";
-    }  
-}  
-
-/*
-function validateAge(year) {
-    const userInput = document.getElementById("year").value;
-    const dob = new Date(userInput);
-
-    if(userInput==null || userInput=='') {
-        document.getElementById("error-year").innerText = "Välj Datum";
-        return false;
-    }
-    else {
-        var month_diff = Date.now() - dob.getTime();
-
-        var age_dt = new Date(month_diff);
-
-        var year = age_dt.getUTCFullYear();
-
-        var age = Math.abs(year - 1900);
-
-        return document.getElementById("error-year").innerText =
-            "Age is: " + age + " years. ";
-    }
+    if (!regBirthdate.test(birthday))
+        return false
+    
+    return true
 }
-*/
 
-year.addEventListener("mouseup", function(event) {
-    ageCalculator(event, "År")
+function getBirthdate(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    if (age < 18) {
+        return false
+    }
+    return true;
+    
+}
+
+birthday.addEventListener("keyup", function(event) {
+    console.log('Över 18 = ' + getBirthdate(event.target.value))
 })
-
 
 firstName.addEventListener("keyup", function(event) {
     validateLength(event, "Förnamn")
